@@ -13,7 +13,6 @@ Primary targeted persona at the moment is a caseworker who is relativley new.
 ## Intial spike/proof of Concept:
 
 - Data is in Socrta
-- Hugo (static site generator) is used to create a simple,low-tech interface to this data as a [data template](https://gohugo.io/templates/data-templates/)
 
 ### Three pages/views:
 
