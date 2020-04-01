@@ -10,9 +10,10 @@ This project is initialy focused on the aims our Living Resource Project. Howeve
 
 Primary targeted persona at the moment is a caseworker who is relativley new. 
 
-## Intial spike/proof of Concept:
+## Intial spike/proof of Concept: A caseworker-focused interface of the living resource guide
 
-- Data is in Socrta
+- The city’s data portal will serve as the backend for the data
+    - This saves a tremendous amount of current and future effort towards developing a backend for this application, not to mention deploying and maintaining that system. Socrata gives us a place to store the data that is already managed and paid for, with an API we don’t have to write. 
 
 ### Three pages/views:
 
@@ -27,4 +28,10 @@ Primary targeted persona at the moment is a caseworker who is relativley new.
 - Update
   - As a caseworker, I want to be able to easily update information on a resource or add a new resource so that this information stays up to date for myself and everyone
   Embed socrata form, eventually with validation
+  
+- The List & Detail views will also have printable versions 
+- The List view will dynamically load the data from Socrata so it will always be up to date
+- This data can be filtered by the user, and the filter and query actions taken by the user will update the relevant filter parameters in the URL of the page. 
+- The user can then bookmark or save these URLs to share with others, re-run the same queries at a later date, or to later print the same version of a list but have it be up to date. 
+
 
