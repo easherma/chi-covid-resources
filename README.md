@@ -2,7 +2,7 @@
 
 This is a project of the Service Design Lab, part of the Office of Design & Delivery at CTM
 
-<we'll flesh this out later once it's more legit>
+This project is initialy focused on the aims our Living Resource Project. However, we've identified that the problems of this project occur often enough that there is great potential for avoiding reduplication of effort by building a modular technology solution that can address those common needs. 
 
 - We have a list of resources, stored on the city's Socrata data portal. This gets us a nice API to work with, but the interface Socrata provides to view and update data is very data centric and not persona centric.
 
