@@ -11,6 +11,18 @@ about: Describe your problem in a user-centered way.
 <!--- Provide a general summary of the issue in the Title above or described by the user story -->
 <!--- A clear and concise description of what the problem is. Ex. I'm always frustrated when [...] -->
 
+### Acceptance Criteria
+
+as a [BDD scenario](https://en.wikipedia.org/wiki/Behavior-driven_development): 
+```gherkin
+Scenario: [title]
+Given [context]
+  And [some more context]
+When  [event]
+Then  [outcome]
+  And [another outcome]
+```
+
 ### Possible Implementation
 <!--- Not obligatory, but suggest an idea for implementing addition or change -->
 <!--- A clear and concise description of what you want to happen. -->
