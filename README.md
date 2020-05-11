@@ -8,22 +8,60 @@ Find updated, verified information on resources in the Chicago area during the c
 
 You'll need [Node](https://nodejs.org/en/) installed and an [Airtable](https://airtable.com/) account set up with the fields in [`src/pages/index.js`](./src/pages/index.js).
 
-Make a copy of the Airtable [COVID Resource Finder base template](https://airtable.com/universe/expTcZwYlcgfz7c3U/covid-resource-finder-template). Copy the `.env.sample` to `.env` and fill in the values with your Airtable [API key](https://support.airtable.com/hc/en-us/articles/219046777-How-do-I-get-my-API-key-) and information about your base. Then make sure to replace the `form-id` keys in `src/intl/` with the Airtable IDs of your forms. 
+The quickest and easiest way to make sure you have the fields required is to:
 
-Once you've set up the prerequisites, you can install dependencies and start a server at [localhost:8000](http://localhost:8000) with:
+1. Clone this repository to a location of your choosing: `git clone https://github.com/City-Bureau/chi-covid-resources.git`
 
-```bash
-npm install
-npm start
-```
+1. Make a copy of this Airtable [COVID Resource Finder base template](https://airtable.com/universe/expTcZwYlcgfz7c3U/covid-resource-finder-template). 
+
+1. Copy the `.env.sample` to `.env` and fill in the values with your Airtable [API key](https://support.airtable.com/hc/en-us/articles/219046777-How-do-I-get-my-API-key-) and information about your base. The minimum requirements to build the site correctly are values for AIRTABLE_BASE, AIRTABLE_KEY, and AIRTABLE_TABLE. You can also provide a value for the view, like so:
+    ```
+    AIRTABLE_BASE="appkz5EStpFHaq9jv"
+    AIRTABLE_KEY="yourairtableapikey"
+    AIRTABLE_TABLE="Directory"
+    AIRTABLE_VIEW="Approved"
+    REPORT_ERROR_PATH=
+    ```
+    Fetching and populating this data relies on the [gatsby-source-airtable](https://www.gatsbyjs.org/packages/gatsby-source-airtable/). 
+
+1. To make sure that form submissions will work correctly,replace the `form-id` keys in `src/intl/` with the Airtable IDs of your forms. You can find the form ID at the end of the URL displayed in the "Share form" control of your form view `https://airtable.com/{FORM_ID}`.
+
+1. Once you've set up the prerequisites, you can install dependencies and start a server at [localhost:8000](http://localhost:8000) with:
+
+    ```bash
+    npm install
+    npm start
+    ```
 
 ### Reporting Resource Errors
 
 If you want to use the functionality for reporting errors with resources, you'll need to deploy an AWS Lambda function using the [`serverless-airtable-button`](https://github.com/City-Bureau/serverless-airtable-button) repo. Alternatively you can replace the custom form modal with an Airtable embed using the `AirtableEmbedModal` component and setting the `prefill_Resource` param in the `queryParams` property to prefill the flagged resource.
 
+### Internationalization
+
+Multilingual support is provided through [`gatsby-plugin-intl`](https://github.com/wiziple/gatsby-plugin-intl). Translated phrases are located in JSON files in the [`src/intl/`](./src/intl/) directory, and translated Markdown pages are in [`src/markdown/static`](./src/markdown/static/).
+
+Some of the content is specific to City Bureau, but the majority of the translated phrases are not. You can configure which languages are displayed by modifying the `languages` array in [`gatsby-config.js`](./gatsby-config.js).
+
+The Python script [`scripts/load_i18n.py`](./scripts/load_i18n.py) is used to load translated content directly from a publicly viewable Google Sheet with this structure:
+
+| ID    | English | Spanish   |
+|-------|---------|-----------|
+| home  | Home    | Inicio    |
+| about | About   | Acerca de |
+
+To load the Spanish column's translations for all of the keys in the `KEYS` list, you'll need to set the `SPREADSHEET_ID` environment variable to the Google Sheet ID (found in the URL) and run:
+
+```bash
+make src/intl/i18n.csv
+cat src/intl/i18n.csv | python scripts/load_i18n.py Spanish > src/intl/es.json
+```
+
+You can replace "Spanish" in the command with the column name that has completed translations.
+
 ## Deploy
 
-To deploy the AWS S3 and Cloudfront, create an S3 bucket that allows static site hosting and a Cloudfront distribution pointing to the bucket's web hosting endpoint. Set the `S3_BUCKET` and `CLOUDFRONT_ID` environment variables with your bucket and distribution ID, and then with GNU Make installed run `make deploy`.
+To deploy the AWS S3 and Cloudfront, create an S3 bucket that allows static site hosting and a Cloudfront distribution pointing to the bucket's web hosting endpoint. Set the `S3_BUCKET` and `CLOUDFRONT_ID` environment variables with your bucket and distribution ID, and then with GNU Make and the [AWS CLI](https://aws.amazon.com/cli/) installed run `make deploy`.
 
 ## Acknowledgments
 
@@ -33,17 +71,15 @@ The setup for this project is directly inspired by the Education Justice Project
 
 ## 🧐 What's inside?
 
-A quick look at the top-level files and directories you'll see in a Gatsby project.
+A quick look at the top-level files and directories you'll see in this Gatsby project.
 
     .
     ├── node_modules
     ├── src
     ├── .gitignore
-    ├── .prettierrc
     ├── gatsby-browser.js
     ├── gatsby-config.js
     ├── gatsby-node.js
-    ├── gatsby-ssr.js
     ├── LICENSE
     ├── package-lock.json
     ├── package.json
@@ -55,23 +91,19 @@ A quick look at the top-level files and directories you'll see in a Gatsby proje
 
 3.  **`.gitignore`**: This file tells git which files it should not track / not maintain a version history for.
 
-4.  **`.prettierrc`**: This is a configuration file for [Prettier](https://prettier.io/). Prettier is a tool to help keep the formatting of your code consistent.
+4.  **`gatsby-browser.js`**: This file is where Gatsby expects to find any usage of the [Gatsby browser APIs](https://www.gatsbyjs.org/docs/browser-apis/) (if any). These allow customization/extension of default Gatsby settings affecting the browser.
 
-5.  **`gatsby-browser.js`**: This file is where Gatsby expects to find any usage of the [Gatsby browser APIs](https://www.gatsbyjs.org/docs/browser-apis/) (if any). These allow customization/extension of default Gatsby settings affecting the browser.
+5.  **`gatsby-config.js`**: This is the main configuration file for a Gatsby site. This is where you can specify information about your site (metadata) like the site title and description, which Gatsby plugins you’d like to include, etc. (Check out the [config docs](https://www.gatsbyjs.org/docs/gatsby-config/) for more detail).
 
-6.  **`gatsby-config.js`**: This is the main configuration file for a Gatsby site. This is where you can specify information about your site (metadata) like the site title and description, which Gatsby plugins you’d like to include, etc. (Check out the [config docs](https://www.gatsbyjs.org/docs/gatsby-config/) for more detail).
+6.  **`gatsby-node.js`**: This file is where Gatsby expects to find any usage of the [Gatsby Node APIs](https://www.gatsbyjs.org/docs/node-apis/) (if any). These allow customization/extension of default Gatsby settings affecting pieces of the site build process.
 
-7.  **`gatsby-node.js`**: This file is where Gatsby expects to find any usage of the [Gatsby Node APIs](https://www.gatsbyjs.org/docs/node-apis/) (if any). These allow customization/extension of default Gatsby settings affecting pieces of the site build process.
+7.  **`LICENSE`**: Gatsby is licensed under the MIT license.
 
-8.  **`gatsby-ssr.js`**: This file is where Gatsby expects to find any usage of the [Gatsby server-side rendering APIs](https://www.gatsbyjs.org/docs/ssr-apis/) (if any). These allow customization of default Gatsby settings affecting server-side rendering.
+8. **`package-lock.json`** (See `package.json` below, first). This is an automatically generated file based on the exact versions of your npm dependencies that were installed for your project. **(You won’t change this file directly).**
 
-9.  **`LICENSE`**: Gatsby is licensed under the MIT license.
+9. **`package.json`**: A manifest file for Node.js projects, which includes things like metadata (the project’s name, author, etc). This manifest is how npm knows which packages to install for your project.
 
-10. **`package-lock.json`** (See `package.json` below, first). This is an automatically generated file based on the exact versions of your npm dependencies that were installed for your project. **(You won’t change this file directly).**
-
-11. **`package.json`**: A manifest file for Node.js projects, which includes things like metadata (the project’s name, author, etc). This manifest is how npm knows which packages to install for your project.
-
-12. **`README.md`**: A text file containing useful reference information about your project.
+10. **`README.md`**: A text file containing useful reference information about your project.
 
 ## 🎓 Learning Gatsby
 
